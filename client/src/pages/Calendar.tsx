@@ -67,7 +67,7 @@ import { format } from 'date-fns';
 import { he } from 'date-fns/locale';
 import { formatJerusalemDate, getTodayJerusalem, createJerusalemDate, addDaysToJerusalemDate, createJerusalemDateTime, toStorageFromDisplay, extractTimeFromDate, getJerusalemOffset } from '@/lib/utils';
 import { apiRequest, queryClient } from '@/lib/queryClient';
-import logoPath from '@/assets/logo-square.png';
+import logoPath from '@/assets/beit-haosher-logo.png';
 
 // Task color mapping for visual indicators - Green/Red system for better distinction
 const TASK_COLORS = {
@@ -1825,10 +1825,10 @@ export default function Calendar() {
               <h1 className="text-lg font-bold">יומן משימות</h1>
             </div>
             
-            <img 
-              src={logoPath} 
-              alt="בית האושר לוגו" 
-              className="w-12 h-10 object-contain"
+            <img
+              src={logoPath}
+              alt="בית האושר לוגו"
+              className="h-10 w-auto object-contain"
             />
             
             <div className="flex items-center gap-2">
@@ -1866,10 +1866,10 @@ export default function Calendar() {
 
           {/* Logo in center - positioned absolutely like in Header component */}
           <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-            <img 
-              src={logoPath} 
-              alt="בית האושר לוגו" 
-              className="w-20 h-16 object-contain mb-1"
+            <img
+              src={logoPath}
+              alt="בית האושר לוגו"
+              className="h-12 w-auto object-contain"
             />
           </div>
 

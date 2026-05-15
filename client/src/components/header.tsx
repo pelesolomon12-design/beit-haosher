@@ -1,7 +1,7 @@
 import { Users, Clock, UserPlus, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
-import logoPath from '@/assets/logo-square.png';
+import logoPath from '@/assets/beit-haosher-logo.png';
 import { RoomManagement } from '@/components/room-management';
 
 import { Room, Occupant } from '@shared/schema';
@@ -36,10 +36,10 @@ export function Header({ totalOccupants, totalCapacity, rooms, occupantsByRoom, 
               תפריט
             </Button>
             
-            <img 
-              src={logoPath} 
-              alt="בית האושר לוגו" 
-              className="w-20 h-20 object-contain"
+            <img
+              src={logoPath}
+              alt="בית האושר לוגו"
+              className="h-11 w-auto object-contain"
             />
             
             <div className="flex items-center space-x-1 space-x-reverse bg-blue-50 px-2 py-1 rounded">
@@ -90,10 +90,10 @@ export function Header({ totalOccupants, totalCapacity, rooms, occupantsByRoom, 
 
           {/* Logo */}
           <div className="flex-1 flex justify-center">
-            <img 
-              src={logoPath} 
-              alt="בית האושר לוגו" 
-              className="w-24 h-24 object-contain"
+            <img
+              src={logoPath}
+              alt="בית האושר לוגו"
+              className="h-12 w-auto object-contain"
             />
           </div>
 
