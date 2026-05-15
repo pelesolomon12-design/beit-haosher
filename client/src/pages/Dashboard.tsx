@@ -9,7 +9,7 @@ import {
   ClipboardList,
   LogOut
 } from "lucide-react";
-import logoPath from "@/assets/beit-haosher-logo.png";
+import logoPath from "@/assets/logo-square.png";
 
 interface NavigationCard {
   title: string;

@@ -265,9 +265,9 @@ export default function InventoryLogin() {
       />
 
       
-      {/* Content - positioned below the logo graphic */}
-      <div className="relative z-10 min-h-screen flex flex-col pb-6 p-4">
-        <div className="w-full max-w-md mx-auto space-y-3" style={{ marginTop: '68vh' }}>
+      {/* Content */}
+      <div className="relative z-10 min-h-screen flex flex-col justify-center pb-12 p-4">
+        <div className="w-full max-w-md mx-auto space-y-6 mt-auto" style={{ marginTop: 'auto', paddingTop: '55vh' }}>
           <div className="space-y-6">
             <div className="space-y-2">
               <Input
