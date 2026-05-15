@@ -1,0 +1,48 @@
+name: Claude Auto-Fix
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: 'המשימה לביצוע'
+        required: true
+      sender:
+        description: 'מי ביקש'
+        required: false
+        default: 'unknown'
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Claude Agent SDK
+        run: npm install @anthropic-ai/claude-agent-sdk
+
+      - name: Run Claude task
+        run: node scripts/run-task.mjs
+        env:
+          TASK: ${{ inputs.task }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "Claude Agent"
+          git config user.email "agent@newlife.co.il"
+          git add -A
+          git diff --staged --quiet && echo "אין שינויים לעשות" && exit 0
+          git commit -m "auto: ${{ inputs.task }} (by ${{ inputs.sender }})"
+          git push
