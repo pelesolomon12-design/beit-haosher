@@ -67,7 +67,7 @@ import { format } from 'date-fns';
 import { he } from 'date-fns/locale';
 import { formatJerusalemDate, getTodayJerusalem, createJerusalemDate, addDaysToJerusalemDate, createJerusalemDateTime, toStorageFromDisplay, extractTimeFromDate, getJerusalemOffset } from '@/lib/utils';
 import { apiRequest, queryClient } from '@/lib/queryClient';
-import logoPath from '@/assets/beit-haosher-logo.jpg';
+import logoPath from '@/assets/beit-haosher-logo.png';
 
 // Task color mapping for visual indicators - Green/Red system for better distinction
 const TASK_COLORS = {

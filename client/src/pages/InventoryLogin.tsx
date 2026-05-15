@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Pill, ShoppingBag, ScanFace } from "lucide-react";
-const backgroundImageDesktop = "/assets/loading-desktop.png";
-const backgroundImageMobile = "/assets/loading-mobile.png";
+const backgroundImageDesktop = "/assets/login-bg.png";
+const backgroundImageMobile = "/assets/login-bg.png";
 import {
   startRegistration,
   startAuthentication,

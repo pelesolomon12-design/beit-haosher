@@ -1,7 +1,7 @@
 import { Users, Clock, UserPlus, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
-import logoPath from '@/assets/beit-haosher-logo.jpg';
+import logoPath from '@/assets/beit-haosher-logo.png';
 import { RoomManagement } from '@/components/room-management';
 
 import { Room, Occupant } from '@shared/schema';
