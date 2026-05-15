@@ -1856,20 +1856,20 @@ export default function Calendar() {
           </div>
         </div>
       ) : (
-        // Desktop Layout - Logo centered like in Header component
-        <div className="flex items-center justify-between relative">
+        // Desktop Layout - full-width header bar filling from top to color change
+        <div className="flex items-center justify-between relative bg-white -mx-4 -mt-4 px-4 h-16 border-b border-gray-200">
           {/* Title on the left */}
           <div className="flex items-center gap-2">
             <CalendarIcon className="h-6 w-6" />
             <h1 className="text-2xl font-bold">יומן משימות</h1>
           </div>
 
-          {/* Logo in center - positioned absolutely like in Header component */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+          {/* Logo in center - fills full bar height */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 h-full flex items-center py-1">
             <img
               src={logoPath}
               alt="בית האושר לוגו"
-              className="h-12 w-auto object-contain"
+              className="h-full w-auto object-contain"
             />
           </div>
 
