@@ -31,8 +31,40 @@
     <meta name="msapplication-TileColor" content="#2563eb" />
   </head>
   <body>
+    <!-- מסך טעינה — נעלם אוטומטית כשה-React מוכן -->
+    <div id="splash" style="
+      position:fixed;inset:0;z-index:9999;
+      background:#000;overflow:hidden;
+      display:flex;align-items:center;justify-content:center;
+      transition:opacity 0.5s ease;
+    ">
+      <iframe
+        id="splash-frame"
+        style="border:none;width:100%;height:100%;position:absolute;inset:0;"
+        src=""
+      ></iframe>
+    </div>
+
+    <script>
+      // בחר מסך לפי גודל המסך
+      const isMobile = window.innerWidth < window.innerHeight;
+      document.getElementById('splash-frame').src =
+        isMobile ? '/loading-mobile.html' : '/loading-desktop.html';
+    </script>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <script>
+      // הסר את מסך הטעינה לאחר שה-React נטען
+      window.__hideSplash = function() {
+        const splash = document.getElementById('splash');
+        if (splash) {
+          splash.style.opacity = '0';
+          setTimeout(() => splash.remove(), 500);
+        }
+      };
+    </script>
     
     <!-- PWA Service Worker Registration -->
     <script>

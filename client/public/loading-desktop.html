@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<title>בית האושר — Loading (Desktop)</title>
+<style>
+  :root {
+    /* Ring geometry, measured from the source image (1672×941) */
+    --img-w: 1672px;
+    --img-h: 941px;
+    --ring-cx: 835px;
+    --ring-cy: 640px;
+    --ring-size: 118px;   /* outer diameter of animated ring */
+    --patch-size: 150px;  /* soft white patch that covers the static ring */
+    --brand-cyan: #1FB6E8;
+    --brand-cyan-soft: rgba(31, 182, 232, 0.55);
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .viewport {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+  .stage {
+    position: relative;
+    width: var(--img-w);
+    height: var(--img-h);
+    background-image: url("assets/loading-desktop.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    transform-origin: center center;
+    will-change: transform;
+    box-shadow: 0 10px 60px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Soft white patch that hides the baked-in static ring underneath. */
+  .patch {
+    position: absolute;
+    left: calc(var(--ring-cx) - var(--patch-size) / 2);
+    top:  calc(var(--ring-cy) - var(--patch-size) / 2);
+    width:  var(--patch-size);
+    height: var(--patch-size);
+    background: radial-gradient(
+      circle,
+      rgb(252, 253, 254) 0%,
+      rgb(252, 253, 254) 48%,
+      rgba(252, 253, 254, 0.85) 65%,
+      rgba(252, 253, 254, 0) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* Animated ring overlay */
+  .ring {
+    position: absolute;
+    left: calc(var(--ring-cx) - var(--ring-size) / 2);
+    top:  calc(var(--ring-cy) - var(--ring-size) / 2);
+    width:  var(--ring-size);
+    height: var(--ring-size);
+    pointer-events: none;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  .ring svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+  }
+  .ring .spin {
+    transform-origin: 50px 50px;
+    animation: spin 1.2s linear infinite;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  /* Very subtle glow pulse — drives only the drop-shadow, not opacity, so the ring stays solid. */
+  @keyframes pulse {
+    0%, 100% { filter: drop-shadow(0 0 3px rgba(31, 182, 232, 0.35)); }
+    50%      { filter: drop-shadow(0 0 10px rgba(31, 182, 232, 0.65)); }
+  }
+</style>
+</head>
+<body>
+  <div class="viewport">
+    <div class="stage" id="stage" data-screen-label="Desktop loading screen">
+      <div class="patch"></div>
+      <div class="ring" aria-hidden="true">
+        <svg viewBox="0 0 100 100">
+          <defs>
+            <!-- Gradient that fades from transparent (at the tail) to full brand cyan (at the head).
+                 Wrapped on a 270° arc via stroke-dasharray. -->
+            <linearGradient id="ringGrad" x1="100%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%"   stop-color="#1FB6E8" stop-opacity="1" />
+              <stop offset="55%"  stop-color="#1FB6E8" stop-opacity="0.55" />
+              <stop offset="100%" stop-color="#1FB6E8" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+
+          <!-- Faint background ring so the gap doesn't look hollow -->
+          <circle cx="50" cy="50" r="40"
+                  fill="none"
+                  stroke="#dbeef8"
+                  stroke-width="6"
+                  opacity="0.45" />
+
+          <!-- Spinning arc -->
+          <g class="spin">
+            <circle cx="50" cy="50" r="40"
+                    fill="none"
+                    stroke="url(#ringGrad)"
+                    stroke-width="7.5"
+                    stroke-linecap="round"
+                    stroke-dasharray="188 252"
+                    transform="rotate(-90 50 50)" />
+            <!-- Bright leading dot for a crisper spinner feel -->
+            <circle cx="90" cy="50" r="3.6" fill="#1FB6E8" />
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Scale the fixed-size stage to fit any viewport while preserving aspect ratio.
+    const stage = document.getElementById('stage');
+    const baseW = 1672, baseH = 941;
+    function fit() {
+      const s = Math.min(window.innerWidth / baseW, window.innerHeight / baseH);
+      stage.style.transform = `scale(${s})`;
+    }
+    fit();
+    window.addEventListener('resize', fit);
+  </script>
+</body>
+</html>
