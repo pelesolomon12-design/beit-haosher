@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">בית האושר</string>
+    <string name="title_activity_main">בית האושר</string>
+    <string name="package_name">com.beithaosher.app</string>
+    <string name="custom_url_scheme">com.beithaosher.app</string>
+</resources>
