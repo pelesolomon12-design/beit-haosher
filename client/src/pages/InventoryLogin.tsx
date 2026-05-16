@@ -5,11 +5,6 @@ import { startRegistration, startAuthentication } from "@simplewebauthn/browser"
 import logoPath from "@/assets/beit-haosher-logo.png";
 import "./inventory-login.css";
 
-const ArrowIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <polyline points="15 18 9 12 15 6"/>
-  </svg>
-);
 
 const FaceIdIcon = () => (
   <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -273,7 +268,6 @@ export default function InventoryLogin() {
                   <span className="il-qbtn-title">לקיחת תרופות</span>
                   <span className="il-qbtn-sub">סימון תרופות שנלקחו</span>
                 </span>
-                <span className="il-qbtn-arrow"><ArrowIcon /></span>
               </button>
 
               <button
@@ -293,7 +287,6 @@ export default function InventoryLogin() {
                   <span className="il-qbtn-title">קניות למטופלים</span>
                   <span className="il-qbtn-sub">צפייה ברשימות קניות</span>
                 </span>
-                <span className="il-qbtn-arrow"><ArrowIcon /></span>
               </button>
 
               <button
@@ -314,7 +307,6 @@ export default function InventoryLogin() {
                   <span className="il-qbtn-title">צריך לקנות</span>
                   <span className="il-qbtn-sub">כניסה לרשימת קניות</span>
                 </span>
-                <span className="il-qbtn-arrow"><ArrowIcon /></span>
               </button>
 
             </div>
