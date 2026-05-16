@@ -1,159 +1,177 @@
 import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
-import { 
-  Home, 
-  Calendar, 
-  CalendarDays, 
-  ShoppingCart, 
-  Pill, 
-  ClipboardList,
-  LogOut
-} from "lucide-react";
 import logoPath from "@/assets/logo-square.png";
+import "./dashboard.css";
 
-interface NavigationCard {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  path: string;
-  gradient: string;
-  hoverGradient: string;
-}
-
-const navigationCards: NavigationCard[] = [
+const tiles = [
   {
-    title: "ניהול חדרים ומטופלים",
-    description: "צפייה ועריכת תפוסת החדרים והמטופלים",
-    icon: <Home className="h-8 w-8" />,
-    path: "/rooms",
-    gradient: "from-blue-500 to-blue-600",
-    hoverGradient: "hover:from-blue-600 hover:to-blue-700",
-  },
-  {
-    title: "לוח זמנים",
-    description: "ניהול אירועים ומשימות יומיות",
-    icon: <Calendar className="h-8 w-8" />,
-    path: "/calendar",
-    gradient: "from-purple-500 to-purple-600",
-    hoverGradient: "hover:from-purple-600 hover:to-purple-700",
-  },
-  {
-    title: "לוח משמרות",
-    description: "תכנון וצפייה במשמרות השבועיות",
-    icon: <CalendarDays className="h-8 w-8" />,
+    id: "shifts",
     path: "/weekly-schedule",
-    gradient: "from-indigo-500 to-indigo-600",
-    hoverGradient: "hover:from-indigo-600 hover:to-indigo-700",
+    title: "לוח משמרות",
+    sub: "תכנון וצפייה במשמרות השבועיות",
+    cta: "פתיחת לוח",
+    colorClass: "t-shifts",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+        <path d="M8 14h2v2H8z"/>
+      </svg>
+    ),
   },
   {
-    title: "רשימת קניות",
-    description: "צפייה ברשימת הקניות הנדרשת",
-    icon: <ShoppingCart className="h-8 w-8" />,
-    path: "/shopping-list",
-    gradient: "from-orange-500 to-orange-600",
-    hoverGradient: "hover:from-orange-600 hover:to-orange-700",
+    id: "calendar",
+    path: "/calendar",
+    title: "לוח זמנים",
+    sub: "ניהול אירועים ומשימות יומיות",
+    cta: "פתיחת לוח",
+    colorClass: "t-schedule",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+        <circle cx="12" cy="16" r="2.4"/>
+        <path d="M12 14.4V16l1.1 1.1"/>
+      </svg>
+    ),
   },
   {
-    title: "ניהול תרופות",
-    description: "הוספה ועריכת תרופות למטופלים",
-    icon: <Pill className="h-8 w-8" />,
-    path: "/medications",
-    gradient: "from-teal-500 to-teal-600",
-    hoverGradient: "hover:from-teal-600 hover:to-teal-700",
+    id: "rooms",
+    path: "/rooms",
+    title: "ניהול חדרים ומטופלים",
+    sub: "צפייה ועריכת תפוסת החדרים והמטופלים",
+    cta: "ניהול",
+    colorClass: "t-rooms",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M3 11 L12 4 L21 11 V20 a1 1 0 0 1 -1 1 H4 a1 1 0 0 1 -1 -1 Z"/>
+        <path d="M9 21 V13 h6 v8"/>
+      </svg>
+    ),
   },
   {
-    title: "קניות מטופלים",
-    description: "רשימות קניות אישיות למטופלים",
-    icon: <ClipboardList className="h-8 w-8" />,
+    id: "patient-shopping",
     path: "/patient-shopping",
-    gradient: "from-pink-500 to-pink-600",
-    hoverGradient: "hover:from-pink-600 hover:to-pink-700",
+    title: "קניות מטופלים",
+    sub: "רשימות קניות אישיות למטופלים",
+    cta: "רשימות",
+    colorClass: "t-personal",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="6" y="4" width="12" height="18" rx="2"/>
+        <path d="M9 4 V3 a1 1 0 0 1 1 -1 h4 a1 1 0 0 1 1 1 v1"/>
+        <line x1="9" y1="10" x2="15" y2="10"/>
+        <line x1="9" y1="14" x2="15" y2="14"/>
+        <line x1="9" y1="18" x2="13" y2="18"/>
+      </svg>
+    ),
+  },
+  {
+    id: "medications",
+    path: "/medications",
+    title: "ניהול תרופות",
+    sub: "הוספה ועריכת תרופות למטופלים",
+    cta: "ניהול",
+    colorClass: "t-meds",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="2" y="9" width="20" height="6" rx="3" transform="rotate(-45 12 12)"/>
+        <line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/>
+      </svg>
+    ),
+  },
+  {
+    id: "shopping",
+    path: "/shopping-list",
+    title: "רשימת קניות",
+    sub: "צפייה ברשימת הקניות הנדרשת",
+    cta: "צפייה",
+    colorClass: "t-shopping",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <circle cx="9" cy="20" r="1.4"/>
+        <circle cx="17" cy="20" r="1.4"/>
+        <path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L20.5 8H6"/>
+      </svg>
+    ),
   },
 ];
+
+const ChevronLeft = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <polyline points="15 18 9 12 15 6"/>
+  </svg>
+);
+
+const ExitIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+    <polyline points="10 17 15 12 10 7"/>
+    <line x1="15" y1="12" x2="3" y2="12"/>
+  </svg>
+);
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
 
-  const handleLogout = () => {
-    setLocation("/");
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" dir="rtl">
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
-      
-      <div className="relative z-10 container mx-auto px-4 py-8 max-w-6xl">
-        <header className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden shadow-lg shadow-black/30 border-2 border-white/20">
-              <img 
-                src={logoPath} 
-                alt="בית האושר לוגו"
-                className="w-full h-full object-cover"
-                data-testid="img-logo"
-              />
+    <div className="db-root" dir="rtl">
+      <main className="db-page">
+
+        {/* Header */}
+        <header className="db-header">
+          <div className="db-brand">
+            <div className="db-brand-logo">
+              <img src={logoPath} alt="בית האושר" data-testid="img-logo" />
             </div>
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-white" data-testid="text-dashboard-title">
-                בית האושר
-              </h1>
-              <p className="text-slate-400 text-sm sm:text-base" data-testid="text-dashboard-subtitle">
-                מערכת ניהול
-              </p>
+            <div className="db-brand-text">
+              <h1 className="db-brand-title" data-testid="text-dashboard-title">בית האושר</h1>
+              <p className="db-brand-sub" data-testid="text-dashboard-subtitle">מערכת ניהול</p>
             </div>
           </div>
-          
-          <Button
-            variant="outline"
-            className="gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white backdrop-blur-sm"
-            onClick={handleLogout}
-            data-testid="button-logout"
-          >
-            <LogOut className="h-4 w-4" />
-            יציאה
-          </Button>
+
+          <button className="db-btn-exit" type="button" onClick={() => setLocation("/")} data-testid="button-logout">
+            <ExitIcon />
+            <span>יציאה</span>
+          </button>
         </header>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {navigationCards.map((card, index) => (
-            <button
-              key={card.path}
-              onClick={() => setLocation(card.path)}
-              className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${card.gradient} ${card.hoverGradient} p-6 text-right transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-white/50`}
-              data-testid={`card-nav-${card.path.replace(/\//g, '-').slice(1) || 'home'}`}
-              style={{ animationDelay: `${index * 50}ms` }}
+        {/* Tiles */}
+        <section className="db-grid" aria-label="פעולות מהירות">
+          {tiles.map((tile) => (
+            <article
+              key={tile.id}
+              className={`db-tile ${tile.colorClass}`}
+              tabIndex={0}
+              onClick={() => setLocation(tile.path)}
+              onKeyDown={(e) => e.key === "Enter" && setLocation(tile.path)}
+              data-testid={`card-nav-${tile.id}`}
             >
-              <div className="absolute top-0 left-0 w-full h-full bg-white/0 group-hover:bg-white/10 transition-all duration-300" />
-              
-              <div className="absolute -top-10 -left-10 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
-              
-              <div className="relative z-10">
-                <div className="mb-4 p-3 rounded-xl bg-white/20 w-fit backdrop-blur-sm">
-                  <div className="text-white">
-                    {card.icon}
-                  </div>
-                </div>
-                
-                <h3 className="text-xl font-bold text-white mb-2">
-                  {card.title}
-                </h3>
-                
-                <p className="text-white/80 text-sm leading-relaxed">
-                  {card.description}
-                </p>
+              <div className="db-tile-head">
+                <div className="db-tile-icon">{tile.icon}</div>
               </div>
-              
-              <div className="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="p-2 rounded-full bg-white/20">
-                  <svg className="h-5 w-5 text-white rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
+              <div className="db-tile-body">
+                <h3 className="db-tile-title">{tile.title}</h3>
+                <p className="db-tile-sub">{tile.sub}</p>
               </div>
-            </button>
+              <span className="db-tile-cta">
+                {tile.cta}
+                <ChevronLeft />
+              </span>
+            </article>
           ))}
-        </div>
-      </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="db-foot">
+          <span><span className="db-foot-dot"></span>המערכת פעילה</span>
+          <span>בית האושר · גרסה 2.4</span>
+        </footer>
+
+      </main>
     </div>
   );
 }
