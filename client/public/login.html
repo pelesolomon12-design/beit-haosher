@@ -324,9 +324,15 @@
 
 <script type="module">
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const isNativeApp = !!(window.Capacitor && window.Capacitor.isNativePlatform());
   const passwordInput = document.getElementById('password');
   const errorMsg = document.getElementById('error-msg');
   const faceidBtn = document.getElementById('faceid-btn');
+
+  // On mobile browser (not native app) — disable password saving and Face ID
+  if (isMobile && !isNativeApp) {
+    passwordInput.setAttribute('autocomplete', 'off');
+  }
 
   function showError(msg) {
     errorMsg.textContent = msg;
@@ -338,8 +344,8 @@
     document.querySelectorAll('button, input').forEach(el => el.disabled = on);
   }
 
-  // Check for existing Face ID credentials (mobile only)
-  if (isMobile && localStorage.getItem('hasLoggedInWithPassword') === 'true') {
+  // Check for existing Face ID credentials (native app only)
+  if (isNativeApp && localStorage.getItem('hasLoggedInWithPassword') === 'true') {
     fetch('/api/webauthn/has-credentials')
       .then(r => r.json())
       .then(d => {
