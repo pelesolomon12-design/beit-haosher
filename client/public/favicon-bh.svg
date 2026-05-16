@@ -1,0 +1,7 @@
+<svg width="256" height="256" xmlns="http://www.w3.org/2000/svg">
+  <rect width="256" height="256" rx="48" fill="#173a78"/>
+  <!-- House shape -->
+  <polygon points="128,48 40,128 64,128 64,208 192,208 192,128 216,128" fill="none" stroke="#2ea8d8" stroke-width="14" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- Heart inside house -->
+  <path d="M128,185 C100,165 80,148 80,128 C80,113 91,102 106,102 C116,102 124,108 128,114 C132,108 140,102 150,102 C165,102 176,113 176,128 C176,148 156,165 128,185 Z" fill="#2ea8d8"/>
+</svg>

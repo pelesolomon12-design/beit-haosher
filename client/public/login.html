@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <title>בית האושר בקהילה — כניסה למערכת</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Frank+Ruhl+Libre:wght@500;700&display=swap" rel="stylesheet">
@@ -195,6 +196,20 @@
     color: #fff; box-shadow: 0 1px 0 rgba(255,255,255,0.28) inset, 0 12px 24px -14px rgba(156,57,199,0.55);
   }
   .qbtn-patshop:hover { box-shadow: 0 1px 0 rgba(255,255,255,0.28) inset, 0 18px 28px -14px rgba(156,57,199,0.65); }
+  .qbtn-shoponly {
+    --bg-1: rgba(255,255,255,0.78); --bg-2: rgba(255,255,255,0.55);
+    --fg: var(--navy); --sub: var(--ink-mute);
+    --icon-bg: rgba(46,168,216,0.14); --icon-fg: var(--navy);
+    --border: rgba(23,58,120,0.12);
+  }
+  .qbtn-arrow {
+    flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(255,255,255,0.5); border: 1px solid var(--border);
+    display: grid; place-items: center; color: var(--fg);
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  .qbtn-arrow svg { width: 13px; height: 13px; stroke-width: 2.2; }
+  .qbtn:hover .qbtn-arrow { transform: translateX(-4px); }
 
   /* Mobile */
   .faceid-btn { display: none; }
