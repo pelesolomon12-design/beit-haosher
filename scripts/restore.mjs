@@ -59,16 +59,10 @@ function downloadFile(url) {
 }
 
 async function restore() {
-  console.log("\nמאיפה לשחזר?");
-  console.log("  [1] GitHub (מומלץ — תמיד עדכני)");
-  console.log("  [2] OneDrive (קבצים מקומיים)");
-
-  const source = await ask("\nבחר: ");
-
   let backup;
   let selectedName;
 
-  if (source.trim() === "1") {
+  {
     // שחזור מ-GitHub
     console.log("\nמוריד רשימת גיבויים מ-GitHub...");
     const files = await githubGet(`/repos/${BACKUP_REPO}/contents/`);
@@ -99,31 +93,6 @@ async function restore() {
     const content = await downloadFile(backups[idx].download_url);
     backup = JSON.parse(content);
 
-  } else {
-    // שחזור מ-OneDrive
-    const files = fs.readdirSync(LOCAL_BACKUP_DIR)
-      .filter(f => f.startsWith("backup_") && f.endsWith(".json"))
-      .sort().reverse();
-
-    if (files.length === 0) {
-      console.log("לא נמצאו גיבויים מקומיים."); rl.close(); process.exit(1);
-    }
-
-    console.log("\nגיבויים זמינים ב-OneDrive:\n");
-    files.forEach((f, i) => {
-      const date = f.replace("backup_", "").replace(".json", "");
-      const size = (fs.statSync(path.join(LOCAL_BACKUP_DIR, f)).size / 1024).toFixed(1);
-      console.log(`  [${i + 1}] ${date}  (${size} KB)`);
-    });
-
-    const choice = await ask("\nבחר מספר: ");
-    const idx = parseInt(choice) - 1;
-    if (isNaN(idx) || idx < 0 || idx >= files.length) {
-      console.log("בחירה לא תקינה."); rl.close(); process.exit(1);
-    }
-
-    selectedName = files[idx];
-    backup = JSON.parse(fs.readFileSync(path.join(LOCAL_BACKUP_DIR, selectedName), "utf8"));
   }
 
   console.log(`\nגיבוי מתאריך: ${backup.timestamp}`);
