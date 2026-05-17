@@ -96,11 +96,6 @@ async function restore() {
   }
 
   console.log(`\nגיבוי מתאריך: ${backup.timestamp}`);
-  const confirm = await ask(`\nשחזר? זה ימחק את כל הנתונים הנוכחיים! (כן/לא): `);
-
-  if (confirm.trim() !== "כן") {
-    console.log("בוטל."); rl.close(); process.exit(0);
-  }
   rl.close();
 
   const client = new Client({ connectionString: DB_URL, ssl: false });
