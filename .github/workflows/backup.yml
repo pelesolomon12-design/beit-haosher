@@ -1,0 +1,67 @@
+name: Daily Database Backup
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # כל יום 04:00 שעון ישראל (02:00 UTC)
+  workflow_dispatch:      # אפשרות להרצה ידנית
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Backup DB and push to backup repo
+        run: |
+          npm install pg
+
+          node << 'EOF'
+          const { Client } = require('pg');
+          const fs = require('fs');
+
+          async function backup() {
+            const client = new Client({
+              connectionString: process.env.DB_URL,
+              ssl: { rejectUnauthorized: false }
+            });
+            await client.connect();
+
+            const tablesResult = await client.query(
+              `SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename`
+            );
+            const tables = tablesResult.rows.map(r => r.tablename);
+
+            const backup = { timestamp: new Date().toISOString(), tables: {} };
+            for (const table of tables) {
+              const result = await client.query(`SELECT * FROM "${table}"`);
+              backup.tables[table] = result.rows;
+            }
+
+            await client.end();
+
+            const date = new Date().toISOString().slice(0, 10);
+            fs.mkdirSync('backups', { recursive: true });
+            fs.writeFileSync(`backups/backup_${date}.json`, JSON.stringify(backup, null, 2));
+            console.log(`Saved backups/backup_${date}.json`);
+          }
+
+          backup().catch(e => { console.error(e); process.exit(1); });
+          EOF
+
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+
+      - name: Push to backup repo
+        run: |
+          git config --global user.email "backup@beit-haosher.app"
+          git config --global user.name "Beit Haosher Backup Bot"
+
+          git clone https://x-access-token:${{ secrets.BACKUP_REPO_TOKEN }}@github.com/pelesolomon12-design/beit-haosher-backup.git backup-repo
+          cp backups/*.json backup-repo/
+          cd backup-repo
+
+          # מחק גיבויים ישנים מעל 30 יום
+          ls -t backup_*.json 2>/dev/null | tail -n +31 | xargs rm -f 2>/dev/null || true
+
+          git add .
+          git diff --cached --quiet || git commit -m "Backup $(date +%Y-%m-%d)"
+          git push
