@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>דמו — לוח משמרות</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; padding: 16px; direction: rtl; }
+  h2 { text-align: center; color: #1e3a5f; margin-bottom: 16px; font-size: 18px; }
+
+  .calendar {
+    display: grid;
+    grid-template-columns: 60px repeat(7, 1fr);
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+  }
+
+  /* כותרות ימים */
+  .header-spacer { background: #f8fafc; border-bottom: 2px solid #e2e8f0; }
+  .day-header {
+    background: #f8fafc;
+    border-bottom: 2px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+    padding: 8px 4px;
+    text-align: center;
+    font-size: 13px;
+  }
+  .day-header .day-name { font-weight: 700; color: #1e3a5f; }
+  .day-header .day-date { color: #64748b; font-size: 11px; }
+  .day-header.today { background: #eff6ff; }
+  .day-header.today .day-name { color: #2563eb; }
+
+  /* שעות */
+  .time-col {
+    border-right: 1px solid #e2e8f0;
+    background: #f8fafc;
+  }
+  .time-label {
+    height: 60px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 4px;
+    font-size: 11px;
+    color: #94a3b8;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  /* תאי יום */
+  .day-col {
+    border-right: 1px solid #e2e8f0;
+    position: relative;
+    display: flex;
+  }
+  .day-col:last-child { border-right: none; }
+
+  /* עמודת עובד בתוך יום */
+  .staff-col {
+    flex: 1;
+    position: relative;
+    min-height: 540px; /* 9 שעות × 60px */
+    border-right: 1px dashed #e2e8f0;
+  }
+  .staff-col:first-child { border-right: none; }
+
+  /* כותרת עובד */
+  .staff-header {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 2px;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* בלוק משמרת */
+  .shift-block {
+    position: absolute;
+    right: 2px;
+    left: 2px;
+    border-radius: 6px;
+    padding: 4px 6px;
+    font-size: 11px;
+    font-weight: 600;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
+  .shift-block .shift-time { font-size: 10px; font-weight: 400; opacity: 0.8; }
+
+  /* צבעי עובדים */
+  .color-fala    { background: #fce7f3; color: #9d174d; border-right: 3px solid #ec4899; }
+  .color-yonatan { background: #dbeafe; color: #1e40af; border-right: 3px solid #3b82f6; }
+  .color-michal  { background: #dcfce7; color: #166534; border-right: 3px solid #22c55e; }
+  .color-doctor  { background: #ede9fe; color: #6b21a8; border-right: 3px solid #a855f7; }
+  .color-nurse   { background: #fce7f3; color: #831843; border-right: 3px solid #f472b6; }
+
+  /* קו שעה נוכחית */
+  .now-line {
+    position: absolute;
+    right: 0; left: 0;
+    height: 2px;
+    background: #ef4444;
+    z-index: 10;
+  }
+  .now-line::before {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: -4px;
+    width: 10px; height: 10px;
+    background: #ef4444;
+    border-radius: 50%;
+  }
+
+  .legend {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 12px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #374151;
+  }
+  .legend-dot {
+    width: 12px; height: 12px;
+    border-radius: 3px;
+  }
+</style>
+</head>
+<body>
+
+<h2>לוח משמרות שבועי — דמו עיצוב חדש</h2>
+
+<div class="calendar">
+  <!-- כותרות -->
+  <div class="header-spacer" style="height:48px"></div>
+  <div class="day-header today"><div class="day-name">ראשון</div><div class="day-date">17/5</div></div>
+  <div class="day-header"><div class="day-name">שני</div><div class="day-date">18/5</div></div>
+  <div class="day-header"><div class="day-name">שלישי</div><div class="day-date">19/5</div></div>
+  <div class="day-header"><div class="day-name">רביעי</div><div class="day-date">20/5</div></div>
+  <div class="day-header"><div class="day-name">חמישי</div><div class="day-date">21/5</div></div>
+  <div class="day-header"><div class="day-name">שישי</div><div class="day-date">22/5</div></div>
+  <div class="day-header"><div class="day-name">שבת</div><div class="day-date">23/5</div></div>
+
+  <!-- עמודת שעות -->
+  <div class="time-col">
+    <div style="height:24px"></div><!-- מקום לכותרות עובדים -->
+    <div class="time-label">07:00</div>
+    <div class="time-label">08:00</div>
+    <div class="time-label">09:00</div>
+    <div class="time-label">10:00</div>
+    <div class="time-label">11:00</div>
+    <div class="time-label">12:00</div>
+    <div class="time-label">13:00</div>
+    <div class="time-label">14:00</div>
+    <div class="time-label">15:00</div>
+  </div>
+
+  <!-- ימים -->
+  <!-- ראשון: פלא (07-15) + יונתן (15-23) + אחות (08-12) -->
+  <div class="day-col" id="day-sun"></div>
+  <!-- שני: מיכל (07-15) + פלא (15-23) -->
+  <div class="day-col" id="day-mon"></div>
+  <!-- שלישי: יונתן (07-15) + מיכל (15-23) + רופא (10-14) -->
+  <div class="day-col" id="day-tue"></div>
+  <!-- רביעי: פלא (07-15) + יונתן (15-23) + אחות (08-12) -->
+  <div class="day-col" id="day-wed"></div>
+  <!-- חמישי: מיכל (07-15) + פלא (15-23) -->
+  <div class="day-col" id="day-thu"></div>
+  <!-- שישי: יונתן (07-15) + מיכל (15-23) -->
+  <div class="day-col" id="day-fri"></div>
+  <!-- שבת: פלא (07-15) + יונתן (15-23) -->
+  <div class="day-col" id="day-sat"></div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#ec4899"></div>פלא</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>יונתן כהן</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>מיכל לוי</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#a855f7"></div>ד"ר שמואל</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f472b6"></div>אחות רחל</div>
+</div>
+
+<script>
+const HOUR_PX = 60;
+const START_HOUR = 7;
+const HEADER_H = 24; // גובה כותרת עובד
+
+function hourToY(timeStr) {
+  const [h, m] = timeStr.split(':').map(Number);
+  return HEADER_H + (h - START_HOUR) * HOUR_PX + (m / 60) * HOUR_PX;
+}
+function duration(from, to) {
+  const [h1,m1] = from.split(':').map(Number);
+  const [h2,m2] = to.split(':').map(Number);
+  return ((h2*60+m2) - (h1*60+m1)) / 60 * HOUR_PX;
+}
+
+function createShift(name, color, from, to) {
+  const block = document.createElement('div');
+  block.className = `shift-block color-${color}`;
+  block.style.top = hourToY(from) + 'px';
+  block.style.height = duration(from, to) + 'px';
+  block.innerHTML = `<div>${name}</div><div class="shift-time">${from}–${to}</div>`;
+  return block;
+}
+
+function buildDay(dayId, staffList) {
+  const col = document.getElementById(dayId);
+  staffList.forEach(({ name, color, shifts }) => {
+    const staffCol = document.createElement('div');
+    staffCol.className = 'staff-col';
+    const hdr = document.createElement('div');
+    hdr.className = `staff-header color-${color}`;
+    hdr.textContent = name;
+    staffCol.appendChild(hdr);
+    shifts.forEach(([from, to]) => {
+      staffCol.appendChild(createShift(name, color, from, to));
+    });
+    col.appendChild(staffCol);
+  });
+}
+
+// ראשון
+buildDay('day-sun', [
+  { name: 'פלא',       color: 'fala',    shifts: [['07:00','15:00']] },
+  { name: 'יונתן',     color: 'yonatan', shifts: [['15:00','22:00']] },
+  { name: 'אחות רחל', color: 'nurse',   shifts: [['08:00','12:00']] },
+]);
+// שני
+buildDay('day-mon', [
+  { name: 'מיכל',  color: 'michal',  shifts: [['07:00','15:00']] },
+  { name: 'פלא',   color: 'fala',    shifts: [['15:00','22:00']] },
+]);
+// שלישי — דוגמה עם שעות שונות!
+buildDay('day-tue', [
+  { name: 'יונתן',    color: 'yonatan', shifts: [['09:00','17:00']] },
+  { name: 'מיכל',    color: 'michal',  shifts: [['08:00','18:00']] },
+  { name: 'פלא',     color: 'fala',    shifts: [['08:00','15:00']] },
+  { name: 'ד"ר שמואל', color: 'doctor', shifts: [['10:00','14:00']] },
+]);
+// רביעי
+buildDay('day-wed', [
+  { name: 'פלא',       color: 'fala',    shifts: [['07:00','15:00']] },
+  { name: 'יונתן',     color: 'yonatan', shifts: [['15:00','22:00']] },
+  { name: 'אחות רחל', color: 'nurse',   shifts: [['08:00','12:00']] },
+]);
+// חמישי
+buildDay('day-thu', [
+  { name: 'מיכל', color: 'michal',  shifts: [['07:00','15:00']] },
+  { name: 'פלא',  color: 'fala',    shifts: [['15:00','22:00']] },
+]);
+// שישי
+buildDay('day-fri', [
+  { name: 'יונתן', color: 'yonatan', shifts: [['07:00','15:00']] },
+  { name: 'מיכל',  color: 'michal',  shifts: [['15:00','22:00']] },
+]);
+// שבת
+buildDay('day-sat', [
+  { name: 'פלא',   color: 'fala',    shifts: [['07:00','15:00']] },
+  { name: 'יונתן', color: 'yonatan', shifts: [['15:00','22:00']] },
+]);
+
+// קו שעה נוכחית ביום ראשון
+const now = new Date();
+const nowY = hourToY(`${now.getHours()}:${now.getMinutes()}`);
+const sunCol = document.getElementById('day-sun').querySelector('.staff-col');
+if (sunCol && nowY > HEADER_H) {
+  const line = document.createElement('div');
+  line.className = 'now-line';
+  line.style.top = nowY + 'px';
+  sunCol.appendChild(line);
+}
+</script>
+</body>
+</html>
