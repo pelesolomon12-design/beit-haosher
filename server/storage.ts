@@ -189,12 +189,15 @@ export class MemStorage implements IStorage {
   private targetInventory: SelectTargetInventory[] = [];
   private shoppingList: SelectShoppingList[] = [];
   private rooms: Room[] = [
-    { id: "room-gold", name: "חדר גולד", pricePerBed: 25000, maxCapacity: 2 },
-    { id: "room-limor", name: "חדר לימור", pricePerBed: 23000, maxCapacity: 3 },
-    { id: "room-or", name: "חדר אור", pricePerBed: 25000, maxCapacity: 2 },
-    { id: "room-solo", name: "חדר סולו", pricePerBed: 35000, maxCapacity: 1 },
-    { id: "room-pela", name: "חדר פלא", pricePerBed: 25000, maxCapacity: 2 },
-    { id: "room-agam", name: "חדר אגם", pricePerBed: 25000, maxCapacity: 2, isWomenOnly: true },
+    { id: "room-alef",   name: "חדר א'", pricePerBed: 8500,  maxCapacity: 2 },
+    { id: "room-bet",    name: "חדר ב'", pricePerBed: 9000,  maxCapacity: 2 },
+    { id: "room-gimel",  name: "חדר ג'", pricePerBed: 10000, maxCapacity: 2 },
+    { id: "room-dalet",  name: "חדר ד'", pricePerBed: 11000, maxCapacity: 3 },
+    { id: "room-heh",    name: "חדר ה'", pricePerBed: 12000, maxCapacity: 2 },
+    { id: "room-vav",    name: "חדר ו'", pricePerBed: 10500, maxCapacity: 2 },
+    { id: "room-zayin",  name: "חדר ז'", pricePerBed: 13500, maxCapacity: 1 },
+    { id: "room-chet",   name: "חדר ח'", pricePerBed: 9500,  maxCapacity: 2, isWomenOnly: true },
+    { id: "room-tet",    name: "חדר ט'", pricePerBed: 11500, maxCapacity: 3, isWomenOnly: true },
   ];
 
   async getAllOccupants(): Promise<Occupant[]> {
