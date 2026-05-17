@@ -46,6 +46,7 @@ export default function MedicationDistribution() {
   const [responsibleNotes, setResponsibleNotes] = useState("");
   const [selectedMedications, setSelectedMedications] = useState<Set<string>>(new Set());
   const [showAuditLog, setShowAuditLog] = useState(false);
+  const [auditLogDate, setAuditLogDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [unmarkConfirmOpen, setUnmarkConfirmOpen] = useState(false);
   const [pendingUnmark, setPendingUnmark] = useState<{ medicationId: string; patientId: string; specificHour: string | null } | null>(null);
   
@@ -774,45 +775,100 @@ export default function MedicationDistribution() {
                 יומן פעולות - סימון תרופות
               </DialogTitle>
             </DialogHeader>
-            <div className="space-y-2">
-              {auditLogs.length === 0 ? (
-                <p className="text-center py-8 text-gray-500">אין רשומות ביומן</p>
-              ) : (
-                auditLogs.map((log: any, index: number) => (
-                  <div
-                    key={log.id || index}
-                    className="p-3 bg-gray-50 rounded-lg border"
-                    data-testid={`audit-log-${index}`}
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-medium">{log.patientName}</span>
-                      <span className="text-xs text-gray-500">
-                        {log.takenAt ? new Date(log.takenAt).toLocaleString('he-IL') : '-'}
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      <span className="font-medium">{log.medicationName}</span>
-                      {(log.timeOfDayLabel || log.timeOfDay) && (
-                        <span className="mr-2 text-blue-600">
-                          ({log.timeOfDayLabel || log.timeOfDay}
-                          {log.specificTime ? ` - ${log.specificTime}` : ''})
-                        </span>
-                      )}
-                      {log.responsibleName && (
-                        <span className="mr-2 text-teal-600">
-                          | אחות: {log.responsibleName}
-                        </span>
-                      )}
-                    </div>
-                    {log.notes && (
-                      <div className="text-xs text-amber-700 mt-1 bg-amber-50 p-2 rounded">
-                        📝 {log.notes}
-                      </div>
-                    )}
-                  </div>
-                ))
-              )}
+
+            {/* בורר ימים */}
+            <div className="space-y-3">
+              <div className="flex gap-1 overflow-x-auto pb-1">
+                {Array.from({ length: 7 }, (_, i) => {
+                  const d = new Date();
+                  d.setDate(d.getDate() - (6 - i));
+                  const dateStr = d.toISOString().slice(0, 10);
+                  const isSelected = auditLogDate === dateStr;
+                  const isToday = i === 6;
+                  const label = isToday ? "היום" : d.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit' });
+                  return (
+                    <button
+                      key={dateStr}
+                      onClick={() => setAuditLogDate(dateStr)}
+                      className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                        isSelected
+                          ? "bg-teal-600 text-white"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+              <input
+                type="date"
+                value={auditLogDate}
+                onChange={e => setAuditLogDate(e.target.value)}
+                className="w-full border rounded-lg px-3 py-1.5 text-sm text-gray-700"
+              />
             </div>
+
+            {/* תיעודים מחולקים לפי שעת היום */}
+            <div className="space-y-4 mt-2">
+              {(() => {
+                const dayLogs = auditLogs.filter((log: any) => {
+                  const logDate = log.takenAt
+                    ? new Date(log.takenAt).toISOString().slice(0, 10)
+                    : log.date?.slice(0, 10);
+                  return logDate === auditLogDate;
+                });
+
+                if (dayLogs.length === 0) {
+                  return <p className="text-center py-8 text-gray-500">אין רשומות ליום זה</p>;
+                }
+
+                return TIME_SLOTS.map(slot => {
+                  const slotLogs = dayLogs.filter((log: any) => log.timeOfDay === slot.id);
+                  if (slotLogs.length === 0) return null;
+                  return (
+                    <div key={slot.id}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span>{slot.icon}</span>
+                        <span className="font-semibold text-gray-700">{slot.label}</span>
+                        <span className="text-xs text-gray-400">({slotLogs.length} רשומות)</span>
+                      </div>
+                      <div className="space-y-2">
+                        {slotLogs.map((log: any, index: number) => (
+                          <div
+                            key={log.id || index}
+                            className="p-3 bg-gray-50 rounded-lg border"
+                            data-testid={`audit-log-${index}`}
+                          >
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="font-medium">{log.patientName}</span>
+                              <span className="text-xs text-gray-500">
+                                {log.takenAt ? new Date(log.takenAt).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' }) : '-'}
+                              </span>
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              <span className="font-medium">{log.medicationName}</span>
+                              {log.specificTime && (
+                                <span className="mr-2 text-blue-600">({log.specificTime})</span>
+                              )}
+                              {log.responsibleName && (
+                                <span className="mr-2 text-teal-600">| {log.responsibleName}</span>
+                              )}
+                            </div>
+                            {log.notes && (
+                              <div className="text-xs text-amber-700 mt-1 bg-amber-50 p-2 rounded">
+                                📝 {log.notes}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                });
+              })()}
+            </div>
+
             <DialogFooter>
               <Button variant="outline" onClick={() => setShowAuditLog(false)}>
                 סגור
